@@ -9,7 +9,7 @@ const expressHandlebars = require('express-handlebars');
 
 const port = process.env.PORT || process.env.NODE_PORT || 3000;
 
-const dbURL = process.env.MONGODB_URI || 'mongodb:localhost/DomoMaker';
+const dbURL = process.env.MONGODB_URI || 'mongodb://localhost/DomoMaker';
 
 // Setup mongoose options to use newer functionality
 const mongooseOptions = {
