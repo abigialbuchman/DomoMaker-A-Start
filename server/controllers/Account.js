@@ -1,6 +1,6 @@
 const models = require('../models');
 
-const { Account } = models.Account;
+const Account = models.Account;
 
 const loginPage = (req, res) => {
   res.render('login');
@@ -11,7 +11,7 @@ const signupPage = (req, res) => {
 };
 
 const logout = (req, res) => {
-  res.render('/');
+  res.render('login');
 };
 
 
@@ -28,9 +28,10 @@ const login = (request, response) => {
 
   return Account.AccountModel.authenticate(username, password, (err, account) => {
     if (err || !account) {
+      console.log(err);
       return res.status(400).json({ error: 'Wrong username or password.' });
     }
-    return res.json({ resdirect: '.maker' });
+    return res.json({ redirect: '/maker' });
   });
 };
 
@@ -51,18 +52,20 @@ const signup = (request, response) => {
     return res.status(400).json({ error: 'RAWR! Passwords do not match' });
   }
 
+  console.log("about to generate account");
+
   return Account.AccountModel.generateHash(req.body.pass, (salt, hash) => {
     const accountData = {
       username: req.body.username,
       salt,
-      password: hash,
+      password: hash, 
     };
 
     const newAccount = new Account.AccountModel(accountData);
-
+  
     const savePromise = newAccount.save();
 
-    savePromise.then(() => res.json({ resdirect: '/maker' }));
+    savePromise.then(() => res.json({ redirect: '/maker' }));
 
     savePromise.catch((err) => {
       console.log(err);
@@ -73,6 +76,9 @@ const signup = (request, response) => {
 
       return res.status(400).json({ error: 'an error occured' });
     });
+
+    console.log("account generated");
+    console.log(accountData);
   });
 };
 
